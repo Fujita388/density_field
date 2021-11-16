@@ -17,14 +17,14 @@ void dump(vector<double> &data, int nx, int ny, int nz) {
 	sprintf(filename, "volume%04d.vtk", index);
 	ofstream ofile(filename);
 	ofile << "# vtk DataFile Version 1.0" << '\n'
-		  << filename << '\n'
-		  << "DATASET STRUCTURED_POINTS" << '\n'
-		  << "DIMENSIONS " << nx << ' ' << ny << ' ' << nz << '\n'
-		  << "ORIGIN 0.0 0.0 0.0" << '\n'
-		  << "SPACING 1.0 1.0 1.0" << '\n'
-		  << "POINT_DATA " << nx * ny * nz << '\n'
-		  << "SCALARS intensity float" << '\n'
-		  << "LOOKUP_TABLE default" << endl;
+		<< filename << '\n'
+		<< "DATASET STRUCTURED_POINTS" << '\n'
+		<< "DIMENSIONS " << nx << ' ' << ny << ' ' << nz << '\n'
+		<< "ORIGIN 0.0 0.0 0.0" << '\n'
+		<< "SPACING 1.0 1.0 1.0" << '\n'
+		<< "POINT_DATA " << nx * ny * nz << '\n'
+		<< "SCALARS intensity float" << '\n'
+		<< "LOOKUP_TABLE default" << endl;
 	for (int i = 0; i < data.size(); i++) {
 		ofile << data[i] << endl;
 	}
