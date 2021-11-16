@@ -10,13 +10,24 @@
 using namespace std;
 
 
-// 各stepごとに全ての密度場を計算する関数
-void gas_volume(double d, double thresh) {
-	ifstream ifile("rescale01.lammpstrj");  // 読み込むファイルのパスを指定
-//	ifstream ifile("test.lammpstrj");  // 読み込むファイルのパスを指定
-	ofstream ofile("test.dat");  // 書き出すファイルのパスを指定
+// ファイルにダンプする関数
+void dump(vector<double> &data) {
+	static int index = 0;
+	char filename[30];
+	sprintf(filename, "volume%04d.vtk", index);
+	ofstream ofile(filename);
+	for (int i = 0; i < data.size(); i++) {
+		ofile << i << " " << data[i] << endl;
+	}
+	index++;
+}
 
-	const int N = 4000;
+
+// 各stepごとに全ての密度場を計算する関数
+void gas_volume(double d) {
+	ifstream ifile("surfactant.lammpstrj");  // 読み込むファイルのパスを指定
+
+	const int N = 10000;
 	int num_atoms;  // 粒子数
 	double L;  // ボックスサイズ
 	double V = pow(d, 3.0);  // セルの体積
@@ -45,7 +56,6 @@ void gas_volume(double d, double thresh) {
 			/////座標データから密度計算/////
 			if (i_step == num_atoms) {
 				vector<double> density(Lx * Ly * Lz, 0);  // 密度データの配列
-				int gas = 0;  // 閾値以下のセルを気泡としてカウント
 				for (int i = 0; i < num_atoms; i++) {
 					int mx = int(pos_data[i][0] / d);
 					int my = int(pos_data[i][1] / d);
@@ -53,12 +63,10 @@ void gas_volume(double d, double thresh) {
 					int i_density = mx + my * Lx + mz * Lx * Ly;  // 密度データの中でのインデックス
 					density[i_density] += 1.0 / V;
 				}
-				for (int i = 0; i < Lx * Ly * Lz; i++) {
-					if (density[i] <= thresh) {
-						gas += 1;
-					}
-				}
-				ofile << ((double)(gas)/(double)(Lx * Ly * Lz)) << '\n';  // 気泡/全体
+				dump(density);  // ファイルに密度場を出力
+//				for (int i = 0; i < Lx * Ly * Lz; i++) {
+//					ofile << density[i] << '\n';  // 計算した密度を出力
+//				}
 				i_step = 0;  // i_stepを初期化
 			}
 		}
@@ -68,7 +76,6 @@ void gas_volume(double d, double thresh) {
 
 
 int main() {
-	gas_volume(1.4875, 0.1);
-//	gas_volume(1.7, 0.1);
+	gas_volume(1.4875);
 	return 0;
 }
