@@ -17,7 +17,7 @@ void dump(vector<double> &data) {
 	sprintf(filename, "volume%04d.vtk", index);
 	ofstream ofile(filename);
 	for (int i = 0; i < data.size(); i++) {
-		ofile << i << " " << data[i] << endl;
+		ofile << data[i] << endl;
 	}
 	index++;
 }
@@ -64,9 +64,6 @@ void gas_volume(double d) {
 					density[i_density] += 1.0 / V;
 				}
 				dump(density);  // ファイルに密度場を出力
-//				for (int i = 0; i < Lx * Ly * Lz; i++) {
-//					ofile << density[i] << '\n';  // 計算した密度を出力
-//				}
 				i_step = 0;  // i_stepを初期化
 			}
 		}
