@@ -3,3 +3,5 @@
 a.out
 *.o
 *.vtk
+*.png
+*.mp4
