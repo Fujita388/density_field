@@ -11,13 +11,14 @@ using namespace std;
 
 
 // ファイルにダンプする関数
-void dump(vector<double> &data, int nx, int ny, int nz) {
+void vtk(vector<double> &data, int nx, int ny, int nz) {
 	static int index = 0;
 	char filename[30];
-	sprintf(filename, "volume%04d.vtk", index);
+	sprintf(filename, "density%04d.vtk", index);
 	ofstream ofile(filename);
 	ofile << "# vtk DataFile Version 1.0" << '\n'
 		<< filename << '\n'
+		<< "ASCII" << '\n'
 		<< "DATASET STRUCTURED_POINTS" << '\n'
 		<< "DIMENSIONS " << nx << ' ' << ny << ' ' << nz << '\n'
 		<< "ORIGIN 0.0 0.0 0.0" << '\n'
@@ -72,7 +73,7 @@ void gas_volume(double d) {
 					int i_density = mx + my * Lx + mz * Lx * Ly;  // 密度データの中でのインデックス
 					density[i_density] += 1.0 / V;
 				}
-				dump(density, Lx, Ly, Lz);  // ファイルに密度場を出力
+				vtk(density, Lx, Ly, Lz);  // ファイルに密度場を出力
 				i_step = 0;  // i_stepを初期化
 			}
 		}
