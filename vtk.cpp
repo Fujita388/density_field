@@ -67,6 +67,7 @@ void gas_volume(double d) {
 
 			/////座標データから密度計算/////
 			if (i_step == num_atoms) {
+				fill(density.begin(), density.end(), 0);
 				for (int i = 0; i < num_atoms; i++) {
 					int mx = int(pos_data[i][0] / d);
 					int my = int(pos_data[i][1] / d);
