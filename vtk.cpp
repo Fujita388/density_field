@@ -45,7 +45,8 @@ void gas_volume(double d) {
 	int i_dump = 0;  // dumpfileの各行の通し番号
 	int i_step = 0;  // step内でのインデックス 
 	string str_dump;
-	double pos_data[N][3];  // 1stepあたりの粒子の座標データの配列
+	static double pos_data[N][3];  // 1stepあたりの粒子の座標データの配列
+	vector<double> density;  // 密度データの配列
 
 	while (getline(ifile, str_dump)) {  // ifileを1行ずつstr_dumpに読み込む
 		if (i_dump == 3) {
@@ -54,6 +55,7 @@ void gas_volume(double d) {
 		if (i_dump == 5) {
 			L = stod(split(str_dump, ' ')[1]);  // 立方体のシミュレーションボックス
 			Lx = Ly = Lz = (int)(L / d);  // 一次元のセルの個数
+			density.resize(Lx * Ly * Lz);  // densityをリサイズ
 		}
 		if (split(str_dump, ' ').size() == 5) {  // 座標データの行の場合
 			i_step += 1;
@@ -65,11 +67,14 @@ void gas_volume(double d) {
 
 			/////座標データから密度計算/////
 			if (i_step == num_atoms) {
-				vector<double> density(Lx * Ly * Lz, 0);  // 密度データの配列
+				fill(density.begin(), density.end(), 0);
 				for (int i = 0; i < num_atoms; i++) {
 					int mx = int(pos_data[i][0] / d);
 					int my = int(pos_data[i][1] / d);
 					int mz = int(pos_data[i][2] / d);
+					if (mx >= Lx) mx -= Lx;
+					if (my >= Ly) my -= Ly;
+					if (mz >= Lz) mz -= Lz;
 					int i_density = mx + my * Lx + mz * Lx * Ly;  // 密度データの中でのインデックス
 					density[i_density] += 1.0 / V;
 				}
