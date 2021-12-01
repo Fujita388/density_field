@@ -1,11 +1,16 @@
 all:
 
-o:
-	g++ -c -std=c++11 vtk.cpp split.cpp
-	g++ -std=c++11 vtk.o split.o
+CPPFLAGS=-std=c++11
+CPPFILE=vtk.cpp split.cpp
+OFILE=vtk.o split.o
 
+o:
+	$(CXX) -c $(CPPFLAGS) $(CPPFILE)
+	$(CXX) $(CPPFLAGS) $(OFILE)
+
+# divisibled by 2 → mogrifyでリサイズ
 mp4:
 	ffmpeg -i density.%04d.png -pix_fmt yuv420p density.mp4
 
 clean:
-	rm -rf a.out *.o *.vtk *.png
+	$(RM) $(OFILE) a.out *.vtk *.png
